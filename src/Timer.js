@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 
-class Timer extends Component {
+class Timer extends PureComponent {
   constructor() {
     super();
     this.timer = React.createRef();
@@ -11,6 +11,16 @@ class Timer extends Component {
   }
 
   //Your code here
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.state.time === nextState.time) {
+      return false
+    }
+   return true
+  }
+
+  componentDidUpdate(){
+    this.timer.current.style.color = "#" + Math.floor(Math.random() * 16777215).toString(16);
+  }
 
   componentDidMount() {
     this.interval = setInterval(
@@ -23,10 +33,11 @@ class Timer extends Component {
     clearInterval(this.interval);
   }
 
+  
   render() {
     const { time, color, logText } = this.state;
     return (
-      <section className="Timer" style={{ background: color }} ref={this.timer}>
+      <section className="Timer" style={{ background: color }} ref={this.timer}>  
         <h1>{time}</h1>
         <button onClick={this.stopClock}>Stop</button>
         <aside className="logText">{logText}</aside>
